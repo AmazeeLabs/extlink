@@ -27,12 +27,14 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
   public function buildForm(array $form, array &$form_state) {
+    //Setup Config
+    $config = $this->configFactory->get('extlink.settings');
 
     $form['extlink_class'] = array(
       '#type' => 'checkbox',
       '#title' => t('Add icon to external links'),
       '#return_value' => 'ext',
-      '#default_value' => variable_get('extlink_class', 'ext'),
+      '#default_value' => $config->get('extlink_class'),
       '#description' => t('Places an !icon icon next to external links.', array('!icon' => theme('image', array('uri' => drupal_get_path('module', 'extlink') . '/extlink.png', 'alt' => t('External Links icon'))))),
     );
 
@@ -40,14 +42,14 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
       '#type' => 'checkbox',
       '#title' => t('Add icon to mailto links'),
       '#return_value' => 'mailto',
-      '#default_value' => variable_get('extlink_mailto_class', 'mailto'),
+      '#default_value' => $config->get('extlink_mailto_class'),
       '#description' => t('Places an !icon icon next to mailto links.', array('!icon' => theme('image',array('uri' => drupal_get_path('module', 'extlink') . '/mailto.png', 'alt' => t('Email links icon'))))),
     );
 
     $form['extlink_subdomains'] = array(
       '#type' => 'checkbox',
       '#title' => t('Consider subdomains internal'),
-      '#default_value' => variable_get('extlink_subdomains', 1),
+      '#default_value' => $config->get('extlink_subdomains'),
       '#description' => t('If checked, links with the same primary domain will all be considered internal. A link from www.example.com to my.example.com would be considered internal. Links between the www. and non-www. domain are always considered internal.'),
     );
 
@@ -55,7 +57,7 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
       '#type' => 'checkbox',
       '#title' => t('Open external links in a new window'),
       '#return_value' => '_blank',
-      '#default_value' => variable_get('extlink_target', 0),
+      '#default_value' => $config->get('extlink_target'),
       '#description' => t('Should all external links be opened in a new window?'),
     );
 
@@ -63,7 +65,7 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
       '#type' => 'checkbox',
       '#title' => t('Display pop-up warnings'),
       '#return_value' => '_blank',
-      '#default_value' => variable_get('extlink_alert', 0),
+      '#default_value' => $config->get('extlink_alert'),
       '#description' => t('Displays a pop-up warning when any external link is clicked.'),
     );
 
@@ -71,7 +73,7 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
       '#type' => 'textarea',
       '#rows' => 3,
       '#title' => t('Pop-up warning text'),
-      '#default_value' => variable_get('extlink_alert_text', 'This link will take you to an external web site. We are not responsible for their content.'),
+      '#default_value' => $config->get('extlink_alert_text'),
       '#description' => t('Text to display in the pop-up external link warning box.'),
       '#wysiwyg' => FALSE,
     );
@@ -106,7 +108,7 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
       '#type' => 'textfield',
       '#title' => t('Exclude links matching the pattern'),
       '#maxlength' => NULL,
-      '#default_value' => variable_get('extlink_exclude', ''),
+      '#default_value' => $config->get('extlink_exclude'),
       '#description' => t('Enter a regular expression for links that you wish to exclude from being considered external.'),
     );
 
@@ -114,7 +116,7 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
       '#type' => 'textfield',
       '#title' => t('Include links matching the pattern'),
       '#maxlength' => NULL,
-      '#default_value' => variable_get('extlink_include', ''),
+      '#default_value' => $config->get('extlink_include'),
       '#description' => t('Enter a regular expression for internal links that you wish to be considered external.'),
     );
   
@@ -135,6 +137,16 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
    * @see book_remove_button_submit()
    */
   public function submitForm(array &$form, array &$form_state) {
+    $this->configFactory->get('extlink.settings')
+      ->set('extlink_include', $form_state['values']['extlink_include'])
+      ->set('extlink_exclude', $form_state['values']['extlink_exclude'])
+      ->set('extlink_alert_text', $form_state['values']['extlink_alert_text'])
+      ->set('extlink_alert', $form_state['values']['extlink_alert'])
+      ->set('extlink_target', $form_state['values']['extlink_target'])
+      ->set('extlink_subdomains', $form_state['values']['extlink_subdomains'])
+      ->set('extlink_mailto_class', $form_state['values']['extlink_mailto_class'])
+      ->set('extlink_class', $form_state['values']['extlink_class'])
+      ->save();
 
     parent::SubmitForm($form, $form_state);
   }

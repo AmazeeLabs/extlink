@@ -1,0 +1,30 @@
+# Schema for the configuration files of the exlink module.
+
+extlink.settings:
+  type: mapping
+  label: 'External Links Settings'
+  mapping:
+    extlink_target:
+      type: boolean
+      label: 'Open external links in a new window'
+    extlink_subdomains:
+      type: boolean
+      label: 'Consider subdomains internal'
+    extlink_alert:
+      type: boolean
+      label: 'Enable Pop-up warnings.'
+    extlink_alert_text:
+      type: string
+      label: 'Message to display when Pop-up warning is shown.'
+    extlink_exclude:
+      type: string
+      label: 'Exclude links matching the pattern'
+    extlink_include:
+      type: string
+      label: 'Include links matching the pattern'
+    extlink_class:
+      type: string
+      label: 'Add icon to external links'
+    extlink_mailto_class:
+      type: string
+      label: 'Add icon to mailto links'
