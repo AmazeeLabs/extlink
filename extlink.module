@@ -14,10 +14,13 @@ function extlink_menu() {
  * Implementation of hook_library_info().
  */
 function extlink_library_info(){
-  $libraries['extlink.jscript'] = array(
-    'title' => 'extlink javascript behavior/logic.',
-    'js' => array(
-      drupal_get_path('module', 'extlink') . '/extlink.js' => array(),
+  $path = drupal_get_path('module', 'extlink');
+  $libraries['extlink'] = array(
+    'title' => 'extlink javascript and css.',
+    'version' => '1.0',
+    'js' => array($path . '/extlink.js' => array(),
+    ),
+    'css' => array($path . '/extlink.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery'),
@@ -32,9 +35,10 @@ function extlink_library_info(){
 /**
  * Implementation of hook_page_build() ().
  */
-function extlink_page_build() {
-  $path = drupal_get_path('module', 'extlink');
-  drupal_add_js($path .'/extlink.js', array('every_page' => TRUE));
+function extlink_page_build(&$page) {
+  $config = config('extlink.settings');
+  $page['#attached']['library'][] = array('extlink', 'extlink');
+  
   drupal_add_js(array('extlink' => array(
     'extTarget'     => $config->get('extlink_target'),
     'extClass'      => $config->get('extlink_class'),
@@ -45,7 +49,4 @@ function extlink_page_build() {
     'extAlertText'  => $config->get('extlink_alert_text'),
     'mailtoClass'   => $config->get('extlink_mailto_class'))), 'setting'
   );
-  if ($config->get('extlink_class') == 'ext' || $config->get('extlink_mailto_class') == 'mailto') {
-    drupal_add_css($path . '/extlink.css', array('every_page' => TRUE));
-  }
 }
