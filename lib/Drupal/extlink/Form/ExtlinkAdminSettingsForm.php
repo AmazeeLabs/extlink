@@ -27,7 +27,6 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    */
   public function buildForm(array $form, array &$form_state) {
-    //Setup Config
     $config = $this->configFactory->get('extlink.settings');
 
     $form['extlink_class'] = array(
