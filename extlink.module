@@ -18,7 +18,7 @@ function extlink_library_info(){
   $libraries['extlink'] = array(
     'title' => 'extlink javascript and css.',
     'version' => '1.0',
-    'js' => array($path . '/extlink.js' => array(),
+    'js' => array($path . '/extlink.min.js' => array(),
     ),
     'css' => array($path . '/extlink.css' => array(),
     ),
