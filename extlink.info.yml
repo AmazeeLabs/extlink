@@ -1,6 +1,6 @@
 name: External Links
 type: module
-description: Adds icon next to external links on the site.
+description: Determine behavior and appearance for external links. Options include: Make external links open in a new window, add icons next to external links and email addresses, display pop-up warnings when users click external links.
 package: User interface
 version: 8.x
 core: 8.x

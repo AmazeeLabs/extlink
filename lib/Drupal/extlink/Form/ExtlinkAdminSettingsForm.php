@@ -31,7 +31,7 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
 
     $form['extlink_class'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Add icon to external links'),
+      '#title' => t('Place an icon next to external links.'),
       '#return_value' => 'ext',
       '#default_value' => $config->get('extlink_class'),
       '#description' => t('Places an !icon icon next to external links.', array('!icon' => theme('image', array('uri' => drupal_get_path('module', 'extlink') . '/extlink.png', 'alt' => t('External Links icon'))))),
@@ -39,7 +39,7 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
 
     $form['extlink_mailto_class'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Add icon to mailto links'),
+      '#title' => t('Place an icon next to mailto links'),
       '#return_value' => 'mailto',
       '#default_value' => $config->get('extlink_mailto_class'),
       '#description' => t('Places an !icon icon next to mailto links.', array('!icon' => theme('image',array('uri' => drupal_get_path('module', 'extlink') . '/mailto.png', 'alt' => t('Email links icon'))))),
@@ -47,9 +47,9 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
 
     $form['extlink_subdomains'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Consider subdomains internal'),
+      '#title' => t('Exclude links with the same primary domain.'),
       '#default_value' => $config->get('extlink_subdomains'),
-      '#description' => t('If checked, links with the same primary domain will all be considered internal. A link from www.example.com to my.example.com would be considered internal. Links between the www. and non-www. domain are always considered internal.'),
+      '#description' => t("For example, a link from 'www.example.com' to the subdomain of 'my.example.com' would be excluded."),
     );
 
     $form['extlink_target'] = array(
@@ -57,25 +57,29 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
       '#title' => t('Open external links in a new window'),
       '#return_value' => '_blank',
       '#default_value' => $config->get('extlink_target'),
-      '#description' => t('Should all external links be opened in a new window?'),
     );
 
     $form['extlink_alert'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Display pop-up warnings'),
+      '#title' => t('Display a pop-up warning when any external link is clicked.'),
       '#return_value' => '_blank',
       '#default_value' => $config->get('extlink_alert'),
-      '#description' => t('Displays a pop-up warning when any external link is clicked.'),
     );
 
     $form['extlink_alert_text'] = array(
       '#type' => 'textarea',
+      '#title' => t('Text to display in the pop-up warning box.'),
       '#rows' => 3,
-      '#title' => t('Pop-up warning text'),
       '#default_value' => $config->get('extlink_alert_text'),
       '#description' => t('Text to display in the pop-up external link warning box.'),
       '#wysiwyg' => FALSE,
-    );
+      '#states' => array(
+      // Only show this field when user opts to display a pop-up warning.
+      'visible' => array(
+        ':input[name="extlink_alert"]' => array('checked' => TRUE),
+      ),
+    ),
+   );
 
     $patterns = array(
       '<em>(example\.com)</em> ' . t('Matches example.com.'),
