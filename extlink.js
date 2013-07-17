@@ -43,7 +43,7 @@ function extlinkAttach(context) {
   $("a:not(." + Drupal.settings.extlink.extClass + ", ." + Drupal.settings.extlink.mailtoClass + "), area:not(." + Drupal.settings.extlink.extClass + ", ." + Drupal.settings.extlink.mailtoClass + ")", context).each(function(el) {
     try {
       var url = this.href.toLowerCase();
-      if (url.indexOf('http') == 0 && (!url.match(internal_link) || (extInclude && url.match(extInclude))) && !(extExclude && url.match(extExclude))) {
+      if (url.indexOf('http') == 0 && (!url.match(internal_link) && !(extExclude && url.match(extExclude))) || (extInclude && url.match(extInclude))) {
         external_links.push(this);
       }
       // Do not include area tags with begin with mailto: (this prohibits
