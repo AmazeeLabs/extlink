@@ -123,6 +123,31 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
       '#description' => t('Enter a regular expression for internal links that you wish to be considered external.'),
     );
   
+    $form['css_matching'] = array(
+      '#tree' => FALSE,
+      '#type' => 'fieldset',
+      '#title' => t('CSS Matching'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#description' =>
+        '<p>' . t('Use CSS selectors to exclude entirely or only look inside explicitly specified classes and IDs for external links.  These will be passed straight to jQuery for matching.') . '</p>',
+    );
+
+    $form['css_matching']['extlink_css_exclude'] = array(
+      '#type' => 'textarea',
+      '#title' => t('Exclude links inside these CSS selectors'),
+      '#maxlength' => NULL,
+      '#default_value' => variable_get('extlink_css_exclude', ''),
+      '#description' => t('Enter a comma-separated list of CSS selectors (ie "#block-block-2 .content, ul.menu")'),
+    );
+
+    $form['css_matching']['extlink_css_explicit'] = array(
+      '#type' => 'textarea',
+      '#title' => t('Only look for links inside these CSS selectors'),
+      '#maxlength' => NULL,
+      '#default_value' => variable_get('extlink_css_explicit', ''),
+      '#description' => t('Enter a comma-separated list of CSS selectors (ie "#block-block-2 .content, ul.menu")'),
+    );
     return parent::buildForm($form, $form_state);
   }
 
