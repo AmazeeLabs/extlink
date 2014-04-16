@@ -82,16 +82,16 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
    );
 
     $patterns = array(
-      '<em>(example\.com)</em> ' . t('Matches example.com.'),
-      '<em>(example\.com)|(example\.net)</em> ' . t('Multiple patterns can be strung together by using a pipe. Matches example.com OR example.net.'),
-      '<em>(links/goto/[0-9]+/[0-9]+)</em> ' . t('Matches links that go through the <a href="http://drupal.org/project/links">Links module</a> redirect.'),
+      '<code>(example\.com)</code> ' . t('Matches example.com.'),
+      '<code>(example\.com)|(example\.net)</code> ' . t('Multiple patterns can be strung together by using a pipe. Matches example.com OR example.net.'),
+      '<code>(links/goto/[0-9]+/[0-9]+)</code> ' . t('Matches links that go through the <a href="http://drupal.org/project/links">Links module</a> redirect.'),
     );
 
     $wildcards = array(
-      '<em>.</em> ' . t('Matches any character.'),
-      '<em>?</em> ' . t('The previous character or set is optional.'),
-      '<em>\d</em> ' . t('Matches any digit (0-9).'),
-      '<em>[a-z]</em> ' . t('Brackets may be used to match a custom set of characters. This matches any alphabetic letter.'),
+      '<code>.</code> ' . t('Matches any character.'),
+      '<code>?</code> ' . t('The previous character or set is optional.'),
+      '<code>\d</code> ' . t('Matches any digit (0-9).'),
+      '<code>[a-z]</code> ' . t('Brackets may be used to match a custom set of characters. This matches any alphabetic letter.'),
     );
 
     $form['patterns'] = array(
@@ -103,7 +103,7 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
         theme('item_list', array('items' => $patterns)) .
         t('Common special characters:') .
         theme('item_list', array('items' => $wildcards)) .
-        '<p>' . t('All special characters (<em>^ $ . ? ( ) | * +</em>) must also be escaped with backslashes. Patterns are not case-sensitive. Any <a href="http://www.javascriptkit.com/javatutors/redev2.shtml">pattern supported by JavaScript</a> may be used.') . '</p>',
+        '<p>' . t('All special characters (!character) must also be escaped with backslashes. Patterns are not case-sensitive. Any <a href="http://www.javascriptkit.com/javatutors/redev2.shtml">pattern supported by JavaScript</a> may be used.', array('!characters' => '<code>^ $ . ? ( ) | * +</code>')) . '</p>',
       '#open' => FALSE,
     );
 
