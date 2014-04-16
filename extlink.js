@@ -23,13 +23,13 @@ function extlinkAttach(context) {
   // Extra internal link matching.
   var extInclude = false;
   if (Drupal.settings.extlink.extInclude) {
-    extInclude = new RegExp(Drupal.settings.extlink.extInclude.replace(/\\/, '\\'));
+    extInclude = new RegExp(Drupal.settings.extlink.extInclude.replace(/\\/, '\\'), "i");
   }
 
   // Extra external link matching.
   var extExclude = false;
   if (Drupal.settings.extlink.extExclude) {
-    extExclude = new RegExp(Drupal.settings.extlink.extExclude.replace(/\\/, '\\'));
+    extExclude = new RegExp(Drupal.settings.extlink.extExclude.replace(/\\/, '\\'), "i");
   }
 
   // Extra external link CSS selector exclusion.
