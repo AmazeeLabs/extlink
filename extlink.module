@@ -39,14 +39,15 @@ function extlink_page_build(&$page) {
   $config = config('extlink.settings');
   $page['#attached']['library'][] = array('extlink', 'extlink');
   
-  drupal_add_js(array('extlink' => array(
-    'extTarget'     => $config->get('extlink_target'),
-    'extClass'      => $config->get('extlink_class'),
-    'extSubdomains' => $config->get('extlink_subdomains'),
-    'extExclude'    => $config->get('extlink_exclude'),
-    'extInclude'    => $config->get('extlink_include'),
-    'extAlert'      => $config->get('extlink_alert'),
-    'extAlertText'  => $config->get('extlink_alert_text'),
-    'mailtoClass'   => $config->get('extlink_mailto_class'))), 'setting'
+  $build['#attached'] = array(
+    'js' => array('extlink' => array(
+      'extTarget'     => $config->get('extlink_target'),
+      'extClass'      => $config->get('extlink_class'),
+      'extSubdomains' => $config->get('extlink_subdomains'),
+      'extExclude'    => $config->get('extlink_exclude'),
+      'extInclude'    => $config->get('extlink_include'),
+      'extAlert'      => $config->get('extlink_alert'),
+      'extAlertText'  => $config->get('extlink_alert_text'),
+      'mailtoClass'   => $config->get('extlink_mailto_class'))), 'setting'
   );
 }
