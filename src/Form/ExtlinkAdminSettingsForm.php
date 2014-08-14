@@ -7,34 +7,33 @@
 
 namespace Drupal\extlink\Form;
 
-use Drupal\Core\ControllerInterface;
-use Drupal\system\SystemConfigFormBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Displays the extlink settings form.
  */
-class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
+class ExtlinkAdminSettingsForm extends ConfigFormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'extlink_admin_settings';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('extlink.settings');
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $config = \Drupal::config('extlink.settings');
 
     $form['extlink_class'] = array(
       '#type' => 'checkbox',
       '#title' => t('Place an icon next to external links.'),
       '#return_value' => 'ext',
       '#default_value' => $config->get('extlink_class'),
-      '#description' => t('Places an !icon icon next to external links.', array('!icon' => theme('image', array('uri' => drupal_get_path('module', 'extlink') . '/extlink.png', 'alt' => t('External Links icon'))))),
+      '#description' => t('Places an !icon icon next to external links.', array('!icon' => _theme('image', array('uri' => drupal_get_path('module', 'extlink') . '/extlink.png', 'alt' => t('External Links icon'))))),
     );
 
     $form['extlink_mailto_class'] = array(
@@ -42,7 +41,15 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
       '#title' => t('Place an icon next to mailto links'),
       '#return_value' => 'mailto',
       '#default_value' => $config->get('extlink_mailto_class'),
-      '#description' => t('Places an !icon icon next to mailto links.', array('!icon' => theme('image',array('uri' => drupal_get_path('module', 'extlink') . '/mailto.png', 'alt' => t('Email links icon'))))),
+      '#description' => t('Places an !icon icon next to mailto links.', array('!icon' => _theme('image',array('uri' => drupal_get_path('module', 'extlink') . '/mailto.png', 'alt' => t('Email links icon'))))),
+    );
+
+    $form['extlink_img_class'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Place an icon next to image links'),
+      '#return_value' => TRUE,
+      '#default_value' => $config->get('extlink_img_class', FALSE),
+      '#description' => t('If checked, images wrapped in an anchor tag will be treated as external links.'),
     );
 
     $form['extlink_subdomains'] = array(
@@ -100,9 +107,9 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
       '#description' =>
         '<p>' . t('External links uses patterns (regular expressions) to match the "href" property of links.') . '</p>' .
         t('Here are some common patterns.') .
-        theme('item_list', array('items' => $patterns)) .
+        _theme('item_list', array('items' => $patterns)) .
         t('Common special characters:') .
-        theme('item_list', array('items' => $wildcards)) .
+        _theme('item_list', array('items' => $wildcards)) .
         '<p>' . t('All special characters (!character) must also be escaped with backslashes. Patterns are not case-sensitive. Any <a href="http://www.javascriptkit.com/javatutors/redev2.shtml">pattern supported by JavaScript</a> may be used.', array('!characters' => '<code>^ $ . ? ( ) | * +</code>')) . '</p>',
       '#open' => FALSE,
     );
@@ -122,7 +129,7 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
       '#default_value' => $config->get('extlink_include'),
       '#description' => t('Enter a regular expression for internal links that you wish to be considered external.'),
     );
-  
+
     $form['css_matching'] = array(
       '#tree' => FALSE,
       '#type' => 'fieldset',
@@ -137,7 +144,7 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
       '#type' => 'textarea',
       '#title' => t('Exclude links inside these CSS selectors'),
       '#maxlength' => NULL,
-      '#default_value' => variable_get('extlink_css_exclude', ''),
+      '#default_value' => $config->get('extlink_css_exclude', ''),
       '#description' => t('Enter a comma-separated list of CSS selectors (ie "#block-block-2 .content, ul.menu")'),
     );
 
@@ -145,27 +152,24 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
       '#type' => 'textarea',
       '#title' => t('Only look for links inside these CSS selectors'),
       '#maxlength' => NULL,
-      '#default_value' => variable_get('extlink_css_explicit', ''),
+      '#default_value' => $config->get('extlink_css_explicit', ''),
       '#description' => t('Enter a comma-separated list of CSS selectors (ie "#block-block-2 .content, ul.menu")'),
     );
     return parent::buildForm($form, $form_state);
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface:validateForm()
+   * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
-   
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface:submitForm()
-   *
-   * @see book_remove_button_submit()
+   * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('extlink.settings')
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    \Drupal::config('extlink.settings')
       ->set('extlink_include', $form_state['values']['extlink_include'])
       ->set('extlink_exclude', $form_state['values']['extlink_exclude'])
       ->set('extlink_alert_text', $form_state['values']['extlink_alert_text'])
@@ -173,7 +177,10 @@ class ExtlinkAdminSettingsForm extends SystemConfigFormBase {
       ->set('extlink_target', $form_state['values']['extlink_target'])
       ->set('extlink_subdomains', $form_state['values']['extlink_subdomains'])
       ->set('extlink_mailto_class', $form_state['values']['extlink_mailto_class'])
+      ->set('extlink_img_class', $form_state['values']['extlink_img_class'])
       ->set('extlink_class', $form_state['values']['extlink_class'])
+      ->set('extlink_css_exclude', $form_state['values']['extlink_css_exclude'])
+      ->set('extlink_css_explicit', $form_state['values']['extlink_css_explicit'])
       ->save();
 
     parent::SubmitForm($form, $form_state);
