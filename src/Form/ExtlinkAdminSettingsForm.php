@@ -33,7 +33,7 @@ class ExtlinkAdminSettingsForm extends ConfigFormBase {
       '#title' => t('Place an icon next to external links.'),
       '#return_value' => 'ext',
       '#default_value' => $config->get('extlink_class'),
-      '#description' => t('Places an !icon icon next to external links.', array('!icon' => _theme('image', array('uri' => drupal_get_path('module', 'extlink') . '/extlink.png', 'alt' => t('External Links icon'))))),
+//      '#description' => t('Places an !icon icon next to external links.', array('!icon' => _theme('image', array('uri' => drupal_get_path('module', 'extlink') . '/extlink.png', 'alt' => t('External Links icon'))))),
     );
 
     $form['extlink_mailto_class'] = array(
@@ -41,7 +41,7 @@ class ExtlinkAdminSettingsForm extends ConfigFormBase {
       '#title' => t('Place an icon next to mailto links'),
       '#return_value' => 'mailto',
       '#default_value' => $config->get('extlink_mailto_class'),
-      '#description' => t('Places an !icon icon next to mailto links.', array('!icon' => _theme('image',array('uri' => drupal_get_path('module', 'extlink') . '/mailto.png', 'alt' => t('Email links icon'))))),
+//      '#description' => t('Places an !icon icon next to mailto links.', array('!icon' => _theme('image',array('uri' => drupal_get_path('module', 'extlink') . '/mailto.png', 'alt' => t('Email links icon'))))),
     );
 
     $form['extlink_img_class'] = array(
@@ -107,9 +107,9 @@ class ExtlinkAdminSettingsForm extends ConfigFormBase {
       '#description' =>
         '<p>' . t('External links uses patterns (regular expressions) to match the "href" property of links.') . '</p>' .
         t('Here are some common patterns.') .
-        _theme('item_list', array('items' => $patterns)) .
+//        _theme('item_list', array('items' => $patterns)) .
         t('Common special characters:') .
-        _theme('item_list', array('items' => $wildcards)) .
+//        _theme('item_list', array('items' => $wildcards)) .
         '<p>' . t('All special characters (!character) must also be escaped with backslashes. Patterns are not case-sensitive. Any <a href="http://www.javascriptkit.com/javatutors/redev2.shtml">pattern supported by JavaScript</a> may be used.', array('!characters' => '<code>^ $ . ? ( ) | * +</code>')) . '</p>',
       '#open' => FALSE,
     );
@@ -169,21 +169,30 @@ class ExtlinkAdminSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    \Drupal::config('extlink.settings')
-      ->set('extlink_include', $form_state['values']['extlink_include'])
-      ->set('extlink_exclude', $form_state['values']['extlink_exclude'])
-      ->set('extlink_alert_text', $form_state['values']['extlink_alert_text'])
-      ->set('extlink_alert', $form_state['values']['extlink_alert'])
-      ->set('extlink_target', $form_state['values']['extlink_target'])
-      ->set('extlink_subdomains', $form_state['values']['extlink_subdomains'])
-      ->set('extlink_mailto_class', $form_state['values']['extlink_mailto_class'])
-      ->set('extlink_img_class', $form_state['values']['extlink_img_class'])
-      ->set('extlink_class', $form_state['values']['extlink_class'])
-      ->set('extlink_css_exclude', $form_state['values']['extlink_css_exclude'])
-      ->set('extlink_css_explicit', $form_state['values']['extlink_css_explicit'])
+    $values = $form_state->getValues();
+
+    \Drupal::configFactory()->getEditable('extlink.settings')
+      ->set('extlink_include', $values['extlink_include'])
+      ->set('extlink_exclude', $values['extlink_exclude'])
+      ->set('extlink_alert_text', $values['extlink_alert_text'])
+      ->set('extlink_alert', $values['extlink_alert'])
+      ->set('extlink_target', $values['extlink_target'])
+      ->set('extlink_subdomains', $values['extlink_subdomains'])
+      ->set('extlink_mailto_class', $values['extlink_mailto_class'])
+      ->set('extlink_img_class', $values['extlink_img_class'])
+      ->set('extlink_class', $values['extlink_class'])
+      ->set('extlink_css_exclude', $values['extlink_css_exclude'])
+      ->set('extlink_css_explicit', $values['extlink_css_explicit'])
       ->save();
 
     parent::SubmitForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEditableConfigNames() {
+    return ['extlink.settings'];
   }
 
 }

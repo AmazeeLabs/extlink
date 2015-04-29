@@ -1,20 +1,22 @@
 (function ($, Drupal, drupalSettings) {
 
+  "use strict";
+
   Drupal.extlink = Drupal.extlink || {};
 
   Drupal.extlink.attach = function (context, drupalSettings) {
-    if (!drupalSettings.hasOwnProperty('extlink')) {
+    if (!drupalSettings.data.hasOwnProperty('extlink')) {
       return;
     }
 
     // Strip the host name down, removing ports, subdomains, or www.
     var pattern = /^(([^\/:]+?\.)*)([^\.:]{4,})((\.[a-z]{1,4})*)(:[0-9]{1,5})?$/;
     var host = window.location.host.replace(pattern, '$3$4');
-    var subdomain = window.location.host.replace(pattern, '$1');
+    var subdomain = ""; // window.location.host.replace(pattern, '$1');
 
     // Determine what subdomains are considered internal.
     var subdomains;
-    if (drupalSettings.extlink.extSubdomains) {
+    if (drupalSettings.data.extlink.extSubdomains) {
       subdomains = "([^/]*\\.)?";
     }
     else if (subdomain == 'www.' || subdomain == '') {
@@ -29,26 +31,26 @@
 
     // Extra internal link matching.
     var extInclude = false;
-    if (drupalSettings.extlink.extInclude) {
-      extInclude = new RegExp(drupalSettings.extlink.extInclude.replace(/\\/, '\\'), "i");
+    if (drupalSettings.data.extlink.extInclude) {
+      extInclude = new RegExp(drupalSettings.data.extlink.extInclude.replace(/\\/, '\\'), "i");
     }
 
     // Extra external link matching.
     var extExclude = false;
-    if (drupalSettings.extlink.extExclude) {
-      extExclude = new RegExp(drupalSettings.extlink.extExclude.replace(/\\/, '\\'), "i");
+    if (drupalSettings.data.extlink.extExclude) {
+      extExclude = new RegExp(drupalSettings.data.extlink.extExclude.replace(/\\/, '\\'), "i");
     }
 
     // Extra external link CSS selector exclusion.
     var extCssExclude = false;
-    if (drupalSettings.extlink.extCssExclude) {
-      extCssExclude = drupalSettings.extlink.extCssExclude;
+    if (drupalSettings.data.extlink.extCssExclude) {
+      extCssExclude = drupalSettings.data.extlink.extCssExclude;
     }
 
     // Extra external link CSS selector explicit.
     var extCssExplicit = false;
-    if (drupalSettings.extlink.extCssExplicit) {
-      extCssExplicit = drupalSettings.extlink.extCssExplicit;
+    if (drupalSettings.data.extlink.extCssExplicit) {
+      extCssExplicit = drupalSettings.data.extlink.extCssExplicit;
     }
 
     // Find all links which are NOT internal and begin with http as opposed
@@ -59,7 +61,7 @@
     // available in jQuery 1.0 (Drupal 5 default).
     var external_links = new Array();
     var mailto_links = new Array();
-    $("a:not(." + drupalSettings.extlink.extClass + ", ." + drupalSettings.extlink.mailtoClass + "), area:not(." + drupalSettings.extlink.extClass + ", ." + drupalSettings.extlink.mailtoClass + ")", context).each(function(el) {
+    $("a:not(." + drupalSettings.data.extlink.extClass + ", ." + drupalSettings.data.extlink.mailtoClass + "), area:not(." + drupalSettings.data.extlink.extClass + ", ." + drupalSettings.data.extlink.mailtoClass + ")", context).each(function (el) {
       try {
         var url = this.href.toLowerCase();
         if (url.indexOf('http') == 0
@@ -85,30 +87,30 @@
       }
     });
 
-    if (drupalSettings.extlink.extClass) {
-      Drupal.extlink.applyClassAndSpan(external_links, drupalSettings.extlink.extClass);
+    if (drupalSettings.data.extlink.extClass) {
+      Drupal.extlink.applyClassAndSpan(external_links, drupalSettings.data.extlink.extClass);
     }
 
-    if (drupalSettings.extlink.mailtoClass) {
-      Drupal.extlink.applyClassAndSpan(mailto_links, drupalSettings.extlink.mailtoClass);
+    if (drupalSettings.data.extlink.mailtoClass) {
+      Drupal.extlink.applyClassAndSpan(mailto_links, drupalSettings.data.extlink.mailtoClass);
     }
 
-    if (drupalSettings.extlink.extTarget) {
+    if (drupalSettings.data.extlink.extTarget) {
       // Apply the target attribute to all links.
-      $(external_links).attr('target', drupalSettings.extlink.extTarget);
+      $(external_links).attr('target', drupalSettings.data.extlink.extTarget);
     }
 
     Drupal.extlink = Drupal.extlink || {};
 
     // Set up default click function for the external links popup. This should be
     // overridden by modules wanting to alter the popup.
-    Drupal.extlink.popupClickHandler = Drupal.extlink.popupClickHandler || function() {
-      if (drupalSettings.extlink.extAlert) {
-        return confirm(drupalSettings.extlink.extAlertText);
+    Drupal.extlink.popupClickHandler = Drupal.extlink.popupClickHandler || function () {
+      if (drupalSettings.data.extlink.extAlert) {
+        return confirm(drupalSettings.data.extlink.extAlertText);
       }
     }
 
-    $(external_links).click(function(e) {
+    $(external_links).click(function (e) {
       return Drupal.extlink.popupClickHandler(e);
     });
   };
@@ -123,7 +125,7 @@
    */
   Drupal.extlink.applyClassAndSpan = function (links, class_name) {
     var $links_to_process;
-    if (drupalSettings.extlink.extImgClass){
+    if (drupalSettings.data.extlink.extImgClass) {
       $links_to_process = $(links);
     }
     else {
@@ -136,11 +138,11 @@
     for (i = 0; i < length; i++) {
       var $link = $($links_to_process[i]);
       if ($link.css('display') == 'inline' || $link.css('display') == 'inline-block') {
-        if (class_name == drupalSettings.extlink.mailtoClass) {
-          $link.append('<span class="' + class_name + '"><span class="element-invisible"> ' + drupalSettings.extlink.mailtoLabel + '</span></span>');
+        if (class_name == drupalSettings.data.extlink.mailtoClass) {
+          $link.append('<span class="' + class_name + '"><span class="element-invisible"> ' + drupalSettings.data.extlink.mailtoLabel + '</span></span>');
         }
         else {
-          $link.append('<span class="' + class_name + '"><span class="element-invisible"> ' + drupalSettings.extlink.extLabel + '</span></span>');
+          $link.append('<span class="' + class_name + '"><span class="element-invisible"> ' + drupalSettings.data.extlink.extLabel + '</span></span>');
         }
       }
     }
