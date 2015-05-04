@@ -1,6 +1,11 @@
 <?php
 
-use Drupal\Component\Utility\String;
+/**
+ * @file
+ * This is the External Links module.
+ */
+
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Implements hook_page_attachments().
@@ -12,7 +17,7 @@ function extlink_page_attachments(array &$attachments) {
   $attachments['#attached']['drupalSettings']['data']['extlink'] = array(
     'extTarget'      => $config->get('extlink_target', 0),
     'extClass'       => $config->get('extlink_class', 'ext'),
-    'extLabel'       => String::checkPlain($config->get('extlink_label', t('(link is external)'))),
+    'extLabel'       => Safemarkup::checkPlain($config->get('extlink_label', t('(link is external)'))),
     'extImgClass'    => $config->get('extlink_img_class', 0),
     'extSubdomains'  => $config->get('extlink_subdomains', 1),
     'extExclude'     => $config->get('extlink_exclude', ''),
@@ -22,6 +27,6 @@ function extlink_page_attachments(array &$attachments) {
     'extAlert'       => $config->get('extlink_alert', 0),
     'extAlertText'   => $config->get('extlink_alert_text', t('This link will take you to an external web site. We are not responsible for their content.')),
     'mailtoClass'    => $config->get('extlink_mailto_class', 'mailto'),
-    'mailtoLabel'    => String::checkPlain($config->get('extlink_mailto_label', t('(link sends e-mail)'))),
+    'mailtoLabel'    => Safemarkup::checkPlain($config->get('extlink_mailto_label', t('(link sends e-mail)'))),
   );
 }
