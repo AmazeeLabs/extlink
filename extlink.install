@@ -13,6 +13,7 @@ function extlink_install() {
   module_set_weight('extlink', 1);
 
   // Be friendly to your users: what to do after install?
+  $url = \Drupal\Core\Url::fromRoute('extlink_admin.settings');
   drupal_set_message(t('You can now <a href="@extlink_admin">configure the External Links module</a> for your site.',
-    array('@extlink_admin' => (string) \Drupal\Core\Url::fromUri('base://admin/config/user-interface/extlink'))), 'status');
+    array('@extlink_admin' => $url->toString())), 'status');
 }
