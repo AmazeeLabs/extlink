@@ -19,7 +19,7 @@
     if (drupalSettings.data.extlink.extSubdomains) {
       subdomains = "([^/]*\\.)?";
     }
-    else if (subdomain == 'www.' || subdomain == '') {
+    else if (subdomain === 'www.' || subdomain === '') {
       subdomains = "(www\\.)?";
     }
     else {
@@ -59,12 +59,12 @@
     // all links by the browser, even local ones.
     // In jQuery 1.1 and higher, we'd use a filter method here, but it is not
     // available in jQuery 1.0 (Drupal 5 default).
-    var external_links = new Array();
-    var mailto_links = new Array();
+    var external_links = [];
+    var mailto_links = [];
     $("a:not(." + drupalSettings.data.extlink.extClass + ", ." + drupalSettings.data.extlink.mailtoClass + "), area:not(." + drupalSettings.data.extlink.extClass + ", ." + drupalSettings.data.extlink.mailtoClass + ")", context).each(function (el) {
       try {
         var url = this.href.toLowerCase();
-        if (url.indexOf('http') == 0
+        if (url.indexOf('http') === 0
           && ((!url.match(internal_link) && !(extExclude && url.match(extExclude))) || (extInclude && url.match(extInclude)))
           && !(extCssExclude && $(this).parents(extCssExclude).length > 0)
           && !(extCssExplicit && $(this).parents(extCssExplicit).length < 1)) {
@@ -72,8 +72,8 @@
         }
         // Do not include area tags with begin with mailto: (this prohibits
         // icons from being added to image-maps).
-        else if (this.tagName != 'AREA'
-          && url.indexOf('mailto:') == 0
+        else if (this.tagName !== 'AREA'
+          && url.indexOf('mailto:') === 0
           && !(extCssExclude && $(this).parents(extCssExclude).length > 0)
           && !(extCssExplicit && $(this).parents(extCssExplicit).length < 1)) {
           mailto_links.push(this);
@@ -108,7 +108,7 @@
       if (drupalSettings.data.extlink.extAlert) {
         return confirm(drupalSettings.data.extlink.extAlertText);
       }
-    }
+    };
 
     $(external_links).click(function (e) {
       return Drupal.extlink.popupClickHandler(e);
@@ -137,8 +137,8 @@
     var length = $links_to_process.length;
     for (i = 0; i < length; i++) {
       var $link = $($links_to_process[i]);
-      if ($link.css('display') == 'inline' || $link.css('display') == 'inline-block') {
-        if (class_name == drupalSettings.data.extlink.mailtoClass) {
+      if ($link.css('display') === 'inline' || $link.css('display') === 'inline-block') {
+        if (class_name === drupalSettings.data.extlink.mailtoClass) {
           $link.append('<span class="' + class_name + '"><span class="element-invisible"> ' + drupalSettings.data.extlink.mailtoLabel + '</span></span>');
         }
         else {
