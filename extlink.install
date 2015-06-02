@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Install, update and uninstall functions for the External Links module.
+ * Install hook for the External Links module.
  */
 
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  */
 function extlink_install() {
   // Weight needs to be 1 for compatibility with SpamSpan.
@@ -14,6 +14,8 @@ function extlink_install() {
 
   // Be friendly to your users: what to do after install?
   $url = \Drupal\Core\Url::fromUri('base://admin/config/user-interface/extlink');
-  drupal_set_message(t('You can now <a href="@extlink_admin">configure the External Links module</a> for your site.',
-    array('@extlink_admin' => $url->toString())), 'status');
+  if (PHP_SAPI != 'cli') {
+    drupal_set_message(t('You can now <a href="@extlink_admin">configure the External Links module</a> for your site.',
+      ['@extlink_admin' => $url->toString()]), 'status');
+  }
 }
