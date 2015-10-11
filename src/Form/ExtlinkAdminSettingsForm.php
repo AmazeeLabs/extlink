@@ -82,7 +82,7 @@ class ExtlinkAdminSettingsForm extends ConfigFormBase {
       '#description' => $this->t('Text to display in the pop-up external link warning box.'),
       '#wysiwyg' => FALSE,
       '#states' => array(
-      // Only show this field when user opts to display a pop-up warning.
+        // Only show this field when user opts to display a pop-up warning.
         'visible' => array(
           ':input[name="extlink_alert"]' => array('checked' => TRUE),
         ),
