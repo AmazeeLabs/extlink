@@ -4,4 +4,4 @@ description: Modify behavior and appearance of external links.
 package: User interface
 version: 8.x
 core: 8.x
-configure: admin/config/user-interface/extlink
+configure: extlink_admin.settings
