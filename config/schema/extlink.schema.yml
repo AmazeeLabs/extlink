@@ -5,7 +5,7 @@ extlink.settings:
   label: 'External Links Settings'
   mapping:
     extlink_target:
-      type: boolean
+      type: string
       label: 'Open external links in a new window'
     extlink_subdomains:
       type: boolean
